@@ -1,3 +1,4 @@
+import 'package:booking_app/pages/details.dart';
 import 'package:booking_app/pages/home.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: HomeScreen(),
+      home: DetailsScreen(),
     );
   }
 }
