@@ -1,0 +1,50 @@
+import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/widgets/home_screen/discover_places.dart';
+import 'package:booking_app/widgets/home_screen/intro.dart';
+import 'package:booking_app/widgets/home_screen/relevant_category.dart';
+import 'package:flutter/material.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      backgroundColor: Colors.grey.shade300,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Intro(),
+            const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                "The most relevant",
+                style: AppWidget.normalTextStyle(22),
+              ),
+            ),
+            const SizedBox(height: 20),
+            RelevantCategory(),
+            const SizedBox(height: 18),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                "Discover new Places",
+                style: AppWidget.normalTextStyle(22),
+              ),
+            ),
+            const SizedBox(height: 20),
+            DiscoverPlaces()
+          ],
+        ),
+      ),
+    );
+  }
+}
