@@ -41,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            DiscoverPlaces()
+            DiscoverPlaces(),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.1,)
           ],
         ),
       ),

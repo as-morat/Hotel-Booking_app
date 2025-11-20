@@ -161,6 +161,7 @@ class DetailsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  SizedBox(height: size.height * 0.1,)
                 ],
               ),
             ),

@@ -1,18 +1,22 @@
+import 'package:booking_app/firebase_options.dart';
+import 'package:booking_app/navigation/bottom_nav.dart';
 import 'package:booking_app/pages/details.dart';
 import 'package:booking_app/pages/home.dart';
 import 'package:booking_app/pages/sign_in.dart';
 import 'package:booking_app/pages/sign_up.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
   runApp(const MyApp());
-}
+} 
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: SignIn(),
+      home: BottomNav(),
     );
   }
 }
