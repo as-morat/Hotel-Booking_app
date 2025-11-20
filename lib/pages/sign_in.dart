@@ -1,3 +1,4 @@
+import 'package:booking_app/pages/sign_up.dart';
 import 'package:booking_app/services/widgets_supported.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,18 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -30,7 +43,7 @@ class _SignInState extends State<SignIn> {
                   color: theme.colorScheme.primaryContainer.withValues(
                     alpha: 0.45,
                   ),
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: .circular(40),
                 ),
                 child: Text(
                   "Welcome Back",
@@ -43,7 +56,7 @@ class _SignInState extends State<SignIn> {
               Container(
                 height: 120,
                 width: 240,
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const .symmetric(vertical: 12),
                 alignment: .topLeft,
                 child: Text(
                   "Log in to your account",
@@ -54,21 +67,25 @@ class _SignInState extends State<SignIn> {
               ),
               const SizedBox(height: 40),
               Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     _textField(
-                      Icons.email_outlined,
-                      "Email",
-                      18,
-                      false,
-                      TextInputType.emailAddress,
+                      controller: _emailController,
+                      icon: Icons.email_outlined,
+                      hintText: "Email",
+                      padding: 18,
+                      obscureText: false,
+                      type: TextInputType.emailAddress,
                     ),
                     _textField(
-                      Icons.password,
-                      "Password",
-                      2,
-                      true,
-                      TextInputType.visiblePassword,
+                      controller: _passwordController,
+                      icon: Icons.lock_outline,
+                      hintText: "Password",
+                      padding: 2,
+                      obscureText: !_isPasswordVisible,
+                      type: TextInputType.visiblePassword,
+                      isPassword: true,
                     ),
                     Align(
                       alignment: .topRight,
@@ -79,55 +96,53 @@ class _SignInState extends State<SignIn> {
                           splashFactory: NoSplash.splashFactory,
                           overlayColor: Colors.transparent,
                         ),
-                        child: Text("Forgot Password?"),
+                        child: const Text("Forgot Password?"),
                       ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
+              SizedBox(
                 height: 55,
                 width: size.width,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF90CAF9),
-                      Color(0xFF42A5F5),
-                      Color(0xFF1E88E5),
-                    ],
-                    stops: [0.0, 0.45, 1.0],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(0, 6),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                      color: Colors.blue.withValues(alpha: 0.25),
-                    ),
-                  ],
-                ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // Login logic here
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    padding: .zero,
+                    elevation: 6,
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: .circular(16)),
+                    shadowColor: Colors.blue.withValues(alpha: 0.25),
                   ),
-                  child: const Text(
-                    "Log In",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                      color: Colors.white,
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: .topLeft,
+                        end: .bottomRight,
+                        colors: [
+                          Color(0xFF90CAF9),
+                          Color(0xFF42A5F5),
+                          Color(0xFF1E88E5),
+                        ],
+                        stops: [0.0, 0.45, 1.0],
+                      ),
+                      borderRadius: .circular(16),
+                    ),
+                    child: Container(
+                      alignment: .center,
+                      child: const Text(
+                        "Log In",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -137,23 +152,22 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: .center,
                 children: [
                   Text(
-                    "Already have an account?",
+                    "Don't have an account? ",
                     style: AppWidget.normalTextStyle(
                       14,
                     ).copyWith(color: Colors.black54),
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      padding: .zero,
-                      splashFactory: NoSplash.splashFactory,
-                      overlayColor: Colors.transparent,
+                  GestureDetector(
+                    onTap: () => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignUp()),
                     ),
                     child: Text(
                       "Sign Up",
-                      style: AppWidget.normalTextStyle(
-                        17,
-                      ).copyWith(color: theme.colorScheme.primary),
+                      style: AppWidget.normalTextStyle(17).copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -161,9 +175,9 @@ class _SignInState extends State<SignIn> {
               const SizedBox(height: 22),
               Row(
                 children: [
-                  Expanded(child: Divider(thickness: 2)),
+                  const Expanded(child: Divider(thickness: 2)),
                   Padding(
-                    padding: .all(12),
+                    padding: const .all(12),
                     child: Text(
                       "Or continue with",
                       style: AppWidget.normalTextStyle(
@@ -171,39 +185,18 @@ class _SignInState extends State<SignIn> {
                       ).copyWith(color: Colors.black54),
                     ),
                   ),
-                  Expanded(child: Divider(thickness: 2)),
+                  const Expanded(child: Divider(thickness: 2)),
                 ],
               ),
               const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: .center,
                 children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Image.asset("images/google.png"),
-                    ),
-                  ),
+                  _socialButton("images/google.png", 50),
                   const SizedBox(width: 10),
-                  SizedBox(
-                    height: 52,
-                    width: 52,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Image.asset("images/facebook.png"),
-                    ),
-                  ),
+                  _socialButton("images/facebook.png", 52),
                   const SizedBox(width: 10),
-                  SizedBox(
-                    height: 44,
-                    width: 44,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Image.asset("images/twitter.png"),
-                    ),
-                  ),
+                  _socialButton("images/twitter.png", 44),
                 ],
               ),
             ],
@@ -213,30 +206,58 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget _textField(
-    IconData icon,
-    String hintText,
-    double padding, [
+  Widget _textField({
+    required TextEditingController controller,
+    required IconData icon,
+    required String hintText,
+    required double padding,
     bool obscureText = false,
     TextInputType type = TextInputType.none,
-  ]) {
+    bool isPassword = false,
+  }) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
+
     return Container(
       height: 58,
       width: size.width,
       margin: .only(bottom: padding),
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: .circular(16),
       ),
       child: TextFormField(
+        controller: controller,
         obscureText: obscureText,
         keyboardType: type,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your $hintText';
+          }
+          if (hintText == "Email" && !value.contains('@')) {
+            return 'Please enter a valid email';
+          }
+          return null;
+        },
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+          contentPadding: const .symmetric(vertical: 14),
           border: InputBorder.none,
           prefixIcon: Icon(icon, size: 24, color: theme.colorScheme.primary),
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: theme.colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                )
+              : null,
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
         ),
@@ -245,6 +266,19 @@ class _SignInState extends State<SignIn> {
           fontSize: 17,
           fontWeight: FontWeight.w600,
         ),
+      ),
+    );
+  }
+
+  Widget _socialButton(String imagePath, double size) {
+    return SizedBox(
+      height: size,
+      width: size,
+      child: IconButton(
+        onPressed: () {
+          // Social login logic
+        },
+        icon: Image.asset(imagePath),
       ),
     );
   }
