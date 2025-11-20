@@ -20,7 +20,7 @@ class DetailsScreen extends StatelessWidget {
               ),
               child: Image.network(
                 "https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?cs=srgb&dl=pexels-donaldtong94-189296.jpg&fm=jpg",
-                height: 250,
+                height: 350,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -69,7 +69,7 @@ class DetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    height: size.height * 0.44,
+                    height: 390,
                     width: size.width,
                     margin: const EdgeInsets.only(bottom: 20),
                     padding: const EdgeInsets.symmetric(
