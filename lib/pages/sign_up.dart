@@ -1,27 +1,82 @@
 import 'package:booking_app/pages/sign_in.dart';
 import 'package:booking_app/services/widgets_supported.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignUp extends StatefulWidget {
+import '../services/provider/auth_provider/auth_controller.dart';
+import '../widgets/custom_snackbar.dart';
+
+class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  ConsumerState<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
+  AuthController get _auth => ref.read(authControllerProvider);
   final _emailController = TextEditingController();
-  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  bool _isLoading = false;
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    _formKey.currentState?.save();
+
+    setState(() => _isLoading = true);
+    try {
+      await _auth.signUp(
+        _emailController.text.trim(),
+        _confirmPasswordController.text.trim(),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        showCustomSnackBar(
+          context,
+          'Sign up successfully!',
+          color: Colors.green,
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        showCustomSnackBar(context, e.toString(), color: Colors.red);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _googleSubmit() async {
+    setState(() => _isLoading = true);
+    try {
+      await _auth.googleSignIn();
+      if (mounted) {
+        showCustomSnackBar(
+          context,
+          'Sign up successfully!',
+          color: Colors.greenAccent,
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        showCustomSnackBar(context, e.toString(), color: Colors.red);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
-    _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -65,9 +120,9 @@ class _SignUpState extends State<SignUp> {
                 alignment: .topLeft,
                 child: Text(
                   "Create your account",
-                  style: AppWidget.normalTextStyle(36).copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: AppWidget.normalTextStyle(
+                    36,
+                  ).copyWith(fontWeight: FontWeight.w800),
                 ),
               ),
               const SizedBox(height: 40),
@@ -81,13 +136,6 @@ class _SignUpState extends State<SignUp> {
                       hintText: "Email",
                       obscureText: false,
                       type: TextInputType.emailAddress,
-                    ),
-                    _textField(
-                      controller: _usernameController,
-                      icon: Icons.person_outlined,
-                      hintText: "Username",
-                      obscureText: false,
-                      type: TextInputType.name,
                     ),
                     _textField(
                       controller: _passwordController,
@@ -112,7 +160,8 @@ class _SignUpState extends State<SignUp> {
                       isConfirmPassword: true,
                       onVisibilityToggle: () {
                         setState(() {
-                          _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                          _isConfirmPasswordVisible =
+                              !_isConfirmPasswordVisible;
                         });
                       },
                     ),
@@ -124,11 +173,7 @@ class _SignUpState extends State<SignUp> {
                 height: 55,
                 width: size.width,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Sign up logic here
-                    }
-                  },
+                  onPressed: _isLoading ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     elevation: 6,
                     padding: EdgeInsets.zero,
@@ -137,7 +182,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     shadowColor: Colors.blue.withValues(alpha: 0.25),
                   ),
-                  child: Ink(
+                  child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         begin: .topLeft,
@@ -149,20 +194,23 @@ class _SignUpState extends State<SignUp> {
                         ],
                         stops: [0.0, 0.45, 1.0],
                       ),
-                      borderRadius: .circular(16),
+                      borderRadius: .circular(12),
                     ),
-                    child: Container(
-                      alignment: .center,
-                      child: const Text(
-                        "Create Account",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    alignment: .center,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          )
+                        : const Text(
+                            "Create Account",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -172,12 +220,12 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   Text(
                     "Already have an account? ",
-                    style: AppWidget.normalTextStyle(14).copyWith(
-                      color: Colors.black54,
-                    ),
+                    style: AppWidget.normalTextStyle(
+                      14,
+                    ).copyWith(color: Colors.black54),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.pushReplacement(
+                    onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const SignIn()),
                     ),
@@ -199,9 +247,9 @@ class _SignUpState extends State<SignUp> {
                     padding: const .all(12),
                     child: Text(
                       "Or continue with",
-                      style: AppWidget.normalTextStyle(15).copyWith(
-                        color: Colors.black54,
-                      ),
+                      style: AppWidget.normalTextStyle(
+                        15,
+                      ).copyWith(color: Colors.black54),
                     ),
                   ),
                   const Expanded(child: Divider(thickness: 2)),
@@ -239,12 +287,12 @@ class _SignUpState extends State<SignUp> {
     final size = MediaQuery.of(context).size;
 
     return Container(
-      height: 58,
+      height: 60,
       width: size.width,
       margin: const .only(bottom: 18),
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
-        borderRadius: .circular(16),
+        borderRadius: .circular(12),
       ),
       child: TextFormField(
         controller: controller,
@@ -256,9 +304,6 @@ class _SignUpState extends State<SignUp> {
           }
           if (hintText == "Email" && !value.contains('@')) {
             return 'Please enter a valid email';
-          }
-          if (hintText == "Username" && value.length < 3) {
-            return 'Username must be at least 3 characters';
           }
           if (hintText == "Password" && value.length < 6) {
             return 'Password must be at least 6 characters';
@@ -274,15 +319,17 @@ class _SignUpState extends State<SignUp> {
           prefixIcon: Icon(icon, size: 24, color: theme.colorScheme.primary),
           suffixIcon: isPassword
               ? IconButton(
-            icon: Icon(
-              obscureText ? Icons.visibility_off : Icons.visibility,
-              color: theme.colorScheme.primary,
-            ),
-            onPressed: onVisibilityToggle,
-          )
+                  icon: Icon(
+                    obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: theme.colorScheme.primary,
+                  ),
+                  onPressed: onVisibilityToggle,
+                )
               : null,
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+          errorStyle: const TextStyle(height: 0.2),
+          floatingLabelBehavior: .never,
         ),
         style: TextStyle(
           color: theme.colorScheme.tertiary,
@@ -297,12 +344,7 @@ class _SignUpState extends State<SignUp> {
     return SizedBox(
       height: size,
       width: size,
-      child: IconButton(
-        onPressed: () {
-          // Social sign up logic
-        },
-        icon: Image.asset(imagePath),
-      ),
+      child: IconButton(onPressed: _googleSubmit, icon: Image.asset(imagePath)),
     );
   }
 }

@@ -14,4 +14,15 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
-# Hotel-Booking_app
+# Packages that are need to install
+
+```sh
+ Flutter pub add google_fonts
+ Flutter pub add shimmer
+ Flutter pub add google_nav_bar
+ Flutter pub add firebase_core
+ Flutter pub add google_sign_in
+ Flutter pub add flutter_riverpod
+ Flutter pub add random_string
+ Flutter pub add firebase_auth
+```

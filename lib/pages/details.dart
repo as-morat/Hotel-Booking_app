@@ -1,8 +1,14 @@
+import 'package:booking_app/models/category_model.dart';
 import 'package:booking_app/services/widgets_supported.dart';
 import 'package:flutter/material.dart';
 
 class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key});
+  final Category? category;
+
+  const DetailsScreen({
+    super.key,
+    this.category
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,50 +17,78 @@ class DetailsScreen extends StatelessWidget {
       backgroundColor: Colors.grey.shade200,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisSize: .min,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                bottomLeft: const Radius.circular(60),
-                bottomRight: const Radius.circular(60),
-              ),
-              child: Image.network(
-                "https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?cs=srgb&dl=pexels-donaldtong94-189296.jpg&fm=jpg",
-                height: 350,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+            Stack(
+              children: [
+                Hero(
+                  tag: category!.id,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(60),
+                      bottomRight: Radius.circular(60),
+                    ),
+                    child: Image.network(
+                      category!.image,
+                      height: 350,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  top: 48,
+                  left: 15,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 32,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                crossAxisAlignment: .start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Sea Pearl",
+                    category!.name,
                     style: AppWidget.normalTextStyle(
                       26,
                     ).copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "৳12,500",
+                    category!.price,
                     style: AppWidget.normalTextStyle(
                       20,
                     ).copyWith(color: Colors.black54),
                   ),
-                  Divider(thickness: 3),
+                  const Divider(thickness: 3),
                   const SizedBox(height: 10),
                   Text(
                     "What this place offers",
                     style: AppWidget.normalTextStyle(24),
                   ),
                   const SizedBox(height: 10),
-                  _available(Icons.wifi, "Wi-Fi", context),
-                  _available(Icons.tv, "HDTV", context),
-                  _available(Icons.soup_kitchen_outlined, "Kitchen", context),
-                  _available(Icons.bathtub_outlined, "Bathroom", context),
-                  Divider(thickness: 3),
+                  if (category!.wifi) _available(Icons.wifi, "Wi-Fi", context),
+                  if (category!.hdtv) _available(Icons.tv, "HDTV", context),
+                  if (category!.kitchen)
+                    _available(Icons.soup_kitchen_outlined, "Kitchen", context),
+                  if (category!.bathroom)
+                    _available(Icons.bathtub_outlined, "Bathroom", context),
+                  const Divider(thickness: 3),
                   const SizedBox(height: 10),
                   Text(
                     "About this place",
@@ -62,7 +96,7 @@ class DetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    category!.details,
                     style: AppWidget.normalTextStyle(
                       18,
                     ).copyWith(color: Colors.black87),
@@ -79,7 +113,7 @@ class DetailsScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           offset: Offset(1, 5),
                           blurRadius: 2,
@@ -88,8 +122,8 @@ class DetailsScreen extends StatelessWidget {
                       ],
                     ),
                     child: Column(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "৳30,000 for 4 nights",
@@ -100,7 +134,7 @@ class DetailsScreen extends StatelessWidget {
                           "Check-in-Date",
                           style: AppWidget.normalTextStyle(18),
                         ),
-                        Divider(),
+                        const Divider(),
                         _available(
                           Icons.calendar_month,
                           "19, November 2025",
@@ -111,7 +145,7 @@ class DetailsScreen extends StatelessWidget {
                           "Check-out-Date",
                           style: AppWidget.normalTextStyle(18),
                         ),
-                        Divider(),
+                        const Divider(),
                         _available(
                           Icons.calendar_month,
                           "22, November 2025",
@@ -127,41 +161,54 @@ class DetailsScreen extends StatelessWidget {
                           height: 50,
                           padding: const EdgeInsets.symmetric(horizontal: 14),
                           decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryContainer
-                                .withValues(alpha: 0.5),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer.withAlpha(50),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: const Center(
                             child: TextField(
-                              keyboardType: TextInputType.numberWithOptions(),
+                              keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 hintText: "Guest numbers...",
                                 border: InputBorder.none,
                                 isCollapsed: true,
                               ),
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 1.2,),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                height: 1.2,
+                              ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 14,),
-                        Container(
-                          height: 50,
+                        const SizedBox(height: 14),
+                        SizedBox(
                           width: size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              foregroundColor: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            child: Text(
+                              "Book Now",
+                              style: AppWidget.whiteTextStyle(22),
+                            ),
                           ),
-                          child: ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))
-                          ), child: Text("Book Now", style: AppWidget.whiteTextStyle(22),)),
-                        )
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(height: size.height * 0.1,)
+                  SizedBox(height: size.height * 0.1),
                 ],
               ),
             ),

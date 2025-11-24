@@ -1,12 +1,9 @@
 import 'package:booking_app/firebase_options.dart';
-import 'package:booking_app/navigation/bottom_nav.dart';
-import 'package:booking_app/pages/details.dart';
-import 'package:booking_app/pages/home.dart';
-import 'package:booking_app/pages/sign_in.dart';
-import 'package:booking_app/pages/sign_up.dart';
+import 'package:booking_app/services/provider/auth_provider/auth_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +12,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 } 
 
 class MyApp extends StatelessWidget {
@@ -28,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: BottomNav(),
+      home: const AuthGate()
     );
   }
 }

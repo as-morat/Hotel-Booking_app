@@ -1,19 +1,77 @@
 import 'package:booking_app/pages/sign_up.dart';
 import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignIn extends StatefulWidget {
+import '../services/provider/auth_provider/auth_controller.dart';
+
+class SignIn extends ConsumerStatefulWidget {
   const SignIn({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  ConsumerState<SignIn> createState() => _SignInState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignInState extends ConsumerState<SignIn> {
   final _formKey = GlobalKey<FormState>();
+  AuthController get _auth => ref.read(authControllerProvider);
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    _formKey.currentState?.save();
+
+    setState(() => _isLoading = true);
+    try {
+      await _auth.signIn(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        showCustomSnackBar(
+          context,
+          'Sign in successfully!',
+          color: Colors.green,
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        showCustomSnackBar(context, e.toString(), color: Colors.red);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _googleSubmit() async {
+    setState(() => _isLoading = true);
+    try {
+      await _auth.googleSignIn();
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        showCustomSnackBar(
+          context,
+          'Sign in successfully!',
+          color: Colors.green,
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        showCustomSnackBar(context, e.toString(), color: Colors.red);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -107,18 +165,14 @@ class _SignInState extends State<SignIn> {
                 height: 55,
                 width: size.width,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Login logic here
-                    }
-                  },
+                  onPressed: _isLoading ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     elevation: 6,
                     padding: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(borderRadius: .circular(16)),
                     shadowColor: Colors.blue.withValues(alpha: 0.25),
                   ),
-                  child: Ink(
+                  child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         begin: .topLeft,
@@ -130,20 +184,23 @@ class _SignInState extends State<SignIn> {
                         ],
                         stops: [0.0, 0.45, 1.0],
                       ),
-                      borderRadius: .circular(16),
+                      borderRadius: .circular(12),
                     ),
-                    child: Container(
-                      alignment: .center,
-                      child: const Text(
-                        "Log In",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    alignment: .center,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          )
+                        : const Text(
+                            "Log In",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -158,7 +215,7 @@ class _SignInState extends State<SignIn> {
                     ).copyWith(color: Colors.black54),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.pushReplacement(
+                    onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const SignUp()),
                     ),
@@ -224,7 +281,7 @@ class _SignInState extends State<SignIn> {
       margin: .only(bottom: padding),
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
-        borderRadius: .circular(16),
+        borderRadius: .circular(12),
       ),
       child: TextFormField(
         controller: controller,
@@ -241,7 +298,7 @@ class _SignInState extends State<SignIn> {
         },
         decoration: InputDecoration(
           contentPadding: const .symmetric(vertical: 14),
-          border: InputBorder.none,
+          border: .none,
           prefixIcon: Icon(icon, size: 24, color: theme.colorScheme.primary),
           suffixIcon: isPassword
               ? IconButton(
@@ -260,6 +317,8 @@ class _SignInState extends State<SignIn> {
               : null,
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+          errorStyle: const TextStyle(height: 0.2),
+          floatingLabelBehavior: .never,
         ),
         style: TextStyle(
           color: theme.colorScheme.tertiary,
@@ -274,12 +333,7 @@ class _SignInState extends State<SignIn> {
     return SizedBox(
       height: size,
       width: size,
-      child: IconButton(
-        onPressed: () {
-          // Social login logic
-        },
-        icon: Image.asset(imagePath),
-      ),
+      child: IconButton(onPressed: _googleSubmit, icon: Image.asset(imagePath)),
     );
   }
 }
