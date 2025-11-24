@@ -36,6 +36,7 @@ class _SignInState extends ConsumerState<SignIn> {
         showCustomSnackBar(
           context,
           'Sign in successfully!',
+          icon: Icons.check_circle_outline,
           color: Colors.green,
         );
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -43,7 +44,12 @@ class _SignInState extends ConsumerState<SignIn> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        showCustomSnackBar(context, e.toString(), color: Colors.red);
+        showCustomSnackBar(
+          context,
+          e.toString(),
+          icon: Icons.cancel_outlined,
+          color: Colors.red,
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -59,6 +65,7 @@ class _SignInState extends ConsumerState<SignIn> {
         showCustomSnackBar(
           context,
           'Sign in successfully!',
+          icon: Icons.check_circle_outline,
           color: Colors.green,
         );
         Navigator.of(context).popUntil((route) => route.isFirst);
@@ -66,7 +73,12 @@ class _SignInState extends ConsumerState<SignIn> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        showCustomSnackBar(context, e.toString(), color: Colors.red);
+        showCustomSnackBar(
+          context,
+          e.toString(),
+          icon: Icons.cancel_outlined,
+          color: Colors.red,
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

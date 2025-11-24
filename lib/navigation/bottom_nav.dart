@@ -1,9 +1,9 @@
 import 'package:booking_app/pages/details.dart';
 import 'package:booking_app/pages/home.dart';
-import 'package:booking_app/services/provider/auth_provider/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+import '../pages/profile.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -80,61 +80,6 @@ class _BottomNavState extends State<BottomNav> {
         ),
       ),
       body: _pages[_currentIndex],
-    );
-  }
-}
-
-class ProfilePage extends ConsumerWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.person_rounded,
-              size: 100,
-              color: Colors.purple,
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Profile Page',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
-              onPressed: () async {
-                await ref.read(firebaseAuthProvider).signOut();
-              },
-              icon: const Icon(Icons.logout, size: 24),
-              label: const Text(
-                'Logout',
-                style: TextStyle(fontSize: 16),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
