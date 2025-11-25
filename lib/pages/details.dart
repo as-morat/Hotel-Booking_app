@@ -1,53 +1,99 @@
 import 'package:booking_app/models/category_model.dart';
 import 'package:booking_app/services/widgets_supported.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-class DetailsScreen extends StatelessWidget {
-  final Category? category;
+class DetailsScreen extends ConsumerStatefulWidget {
+  final Category hotel;
 
-  const DetailsScreen({
-    super.key,
-    this.category
-  });
+  const DetailsScreen({super.key, required this.hotel});
+
+  @override
+  ConsumerState<DetailsScreen> createState() => _DetailsScreenState();
+}
+
+class _DetailsScreenState extends ConsumerState<DetailsScreen> {
+  late Category selectedHotel;
+  TextEditingController memberController = TextEditingController();
+  TextEditingController checkInController = TextEditingController();
+  TextEditingController checkOutController = TextEditingController();
+  DateTime? checkInDate;
+  DateTime? checkOutDate;
+
+  Future<void> _selectDate(bool isCheckIn) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: (isCheckIn ? checkInDate : checkOutDate) ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050),
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (isCheckIn) {
+          checkInDate = picked;
+          checkInController.text = DateFormat("dd, MMMM yyyy").format(picked);
+        } else {
+          checkOutDate = picked;
+          checkOutController.text = DateFormat("dd, MMMM yyyy").format(picked);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    memberController.dispose();
+    checkInController.dispose();
+    checkOutController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedHotel = widget.hotel;
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Stack(
               children: [
                 Hero(
-                  tag: category!.id,
+                  tag: selectedHotel.id,
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(60),
-                      bottomRight: Radius.circular(60),
+                    borderRadius: const .only(
+                      bottomLeft: .circular(60),
+                      bottomRight: .circular(60),
                     ),
                     child: Image.network(
-                      category!.image,
+                      selectedHotel.image,
                       height: 350,
-                      width: double.infinity,
+                      width: .infinity,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-
                 Positioned(
                   top: 48,
                   left: 15,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: .circular(50),
                     ),
                     child: IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back_ios_new,
                         size: 32,
                         color: Colors.white,
@@ -59,21 +105,19 @@ class DetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const .symmetric(horizontal: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: .start,
                 children: [
                   Text(
-                    category!.name,
-                    style: AppWidget.normalTextStyle(
-                      26,
-                    ).copyWith(fontWeight: FontWeight.bold),
+                    selectedHotel.name,
+                    style: AppWidget.normalTextStyle(26)
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    category!.price,
-                    style: AppWidget.normalTextStyle(
-                      20,
-                    ).copyWith(color: Colors.black54),
+                    selectedHotel.price,
+                    style: AppWidget.normalTextStyle(20)
+                        .copyWith(color: Colors.black54),
                   ),
                   const Divider(thickness: 3),
                   const SizedBox(height: 10),
@@ -82,11 +126,13 @@ class DetailsScreen extends StatelessWidget {
                     style: AppWidget.normalTextStyle(24),
                   ),
                   const SizedBox(height: 10),
-                  if (category!.wifi) _available(Icons.wifi, "Wi-Fi", context),
-                  if (category!.hdtv) _available(Icons.tv, "HDTV", context),
-                  if (category!.kitchen)
+                  if (selectedHotel.wifi)
+                    _available(Icons.wifi, "Wi-Fi", context),
+                  if (selectedHotel.hdtv)
+                    _available(Icons.tv, "HDTV", context),
+                  if (selectedHotel.kitchen)
                     _available(Icons.soup_kitchen_outlined, "Kitchen", context),
-                  if (category!.bathroom)
+                  if (selectedHotel.bathroom)
                     _available(Icons.bathtub_outlined, "Bathroom", context),
                   const Divider(thickness: 3),
                   const SizedBox(height: 10),
@@ -96,23 +142,20 @@ class DetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    category!.details,
-                    style: AppWidget.normalTextStyle(
-                      18,
-                    ).copyWith(color: Colors.black87),
+                    selectedHotel.details,
+                    style: AppWidget.normalTextStyle(18).copyWith(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Container(
-                    height: 390,
                     width: size.width,
-                    margin: const EdgeInsets.only(bottom: 20),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 16,
-                    ),
+                    margin: const .only(bottom: 20),
+                    padding: const .symmetric(horizontal: 10, vertical: 16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: .circular(20),
                       boxShadow: const [
                         BoxShadow(
                           offset: Offset(1, 5),
@@ -122,36 +165,33 @@ class DetailsScreen extends StatelessWidget {
                       ],
                     ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: .min,
+                      crossAxisAlignment: .start,
                       children: [
-                        Text(
-                          "৳30,000 for 4 nights",
-                          style: AppWidget.normalTextStyle(20),
+                        Row(
+                          children: [
+                            Icon(Icons.discount, size: 22, color: Theme.of(context).colorScheme.primary,),
+                            const SizedBox(width: 6),
+                            Text(
+                              selectedHotel.discount,
+                              style: AppWidget.normalTextStyle(22),),
+                          ],
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          "Check-in-Date",
+                          "Check-in Date",
                           style: AppWidget.normalTextStyle(18),
                         ),
-                        const Divider(),
-                        _available(
-                          Icons.calendar_month,
-                          "19, November 2025",
-                          context,
-                          17,
-                        ),
+                        const SizedBox(height: 8),
+                        _buildDateField(checkInController, true),
+                        const SizedBox(height: 10),
                         Text(
-                          "Check-out-Date",
+                          "Check-out Date",
                           style: AppWidget.normalTextStyle(18),
                         ),
-                        const Divider(),
-                        _available(
-                          Icons.calendar_month,
-                          "22, November 2025",
-                          context,
-                          17,
-                        ),
+                        const SizedBox(height: 8),
+                        _buildDateField(checkOutController, false),
+                        const SizedBox(height: 10),
                         Text(
                           "Number of guests",
                           style: AppWidget.normalTextStyle(18),
@@ -159,22 +199,24 @@ class DetailsScreen extends StatelessWidget {
                         const SizedBox(height: 6),
                         Container(
                           height: 50,
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          padding: const .symmetric(horizontal: 14),
                           decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer.withAlpha(50),
-                            borderRadius: BorderRadius.circular(14),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer
+                                .withAlpha(80),
+                            borderRadius: .circular(14),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: TextField(
+                              controller: memberController,
                               keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 hintText: "Guest numbers...",
                                 border: InputBorder.none,
                                 isCollapsed: true,
                               ),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                                 height: 1.2,
@@ -187,28 +229,28 @@ class DetailsScreen extends StatelessWidget {
                           width: size.width,
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              // Booking logic here
+                            },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.primary,
-                              foregroundColor: Theme.of(
-                                context,
-                              ).colorScheme.onPrimary,
+                              backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                              foregroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: .circular(14),
                               ),
                             ),
                             child: Text(
                               "Book Now",
-                              style: AppWidget.whiteTextStyle(22),
+                              style: AppWidget.whiteTextStyle(20),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: size.height * 0.1),
+                  SizedBox(height: size.height * 0.01),
                 ],
               ),
             ),
@@ -218,12 +260,88 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildDateField(TextEditingController controller, bool isCheckIn) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: .circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        readOnly: true,
+        onTap: () => _selectDate(isCheckIn),
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Colors.black87,
+        ),
+        decoration: InputDecoration(
+          hintText: isCheckIn ? "Select Check-in Date" : "Select Check-out Date",
+          hintStyle: TextStyle(
+            color: Colors.grey.shade500,
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+          ),
+          prefixIcon: Icon(
+            Icons.calendar_month_rounded,
+            size: 26,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          suffixIcon: controller.text.isNotEmpty
+              ? Icon(
+            Icons.check_circle,
+            color: Theme.of(context).colorScheme.primary,
+            size: 22,
+          )
+              : Icon(
+            Icons.arrow_drop_down,
+            color: Colors.grey.shade400,
+            size: 28,
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: Colors.grey.shade300,
+              width: 1.5,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: Colors.grey.shade300,
+              width: 1.5,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+              width: 2,
+            ),
+          ),
+          contentPadding: const .symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _available(
-    IconData icon,
-    String content,
-    BuildContext context, [
-    double size = 20,
-  ]) {
+      IconData icon,
+      String content,
+      BuildContext context, [
+        double size = 20,
+      ]) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
@@ -232,9 +350,8 @@ class DetailsScreen extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             content,
-            style: AppWidget.normalTextStyle(
-              size,
-            ).copyWith(letterSpacing: 0.5, fontWeight: FontWeight.w600),
+            style: AppWidget.normalTextStyle(size)
+                .copyWith(letterSpacing: 0.5, fontWeight: FontWeight.w600),
           ),
         ],
       ),

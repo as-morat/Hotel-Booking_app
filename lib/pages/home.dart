@@ -1,7 +1,7 @@
 import 'package:booking_app/services/widgets_supported.dart';
 import 'package:booking_app/widgets/home_screen/discover_places.dart';
 import 'package:booking_app/widgets/home_screen/intro.dart';
-import 'package:booking_app/widgets/home_screen/relevant_category.dart';
+import 'package:booking_app/widgets/home_screen/hotel_category.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

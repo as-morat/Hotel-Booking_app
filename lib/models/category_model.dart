@@ -8,6 +8,7 @@ class Category {
   bool kitchen;
   bool bathroom;
   String details;
+  String discount;
   String id;
 
   Category({
@@ -20,6 +21,7 @@ class Category {
     required this.kitchen,
     required this.bathroom,
     required this.details,
+    required this.discount,
     required this.id,
   });
 
@@ -34,6 +36,7 @@ class Category {
       kitchen: map['kitchen'] ?? false,
       bathroom: map['bathroom'] ?? false,
       details: map['details'] ?? '',
+      discount: map['discount'] ?? '',
       id: map['id'] ?? '',
     );
   }

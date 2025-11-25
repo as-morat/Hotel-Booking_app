@@ -33,7 +33,7 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
   void navigateToDetail(Category category) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => DetailsScreen(category: category)),
+      MaterialPageRoute(builder: (_) => DetailsScreen(hotel: category)),
     );
   }
 
@@ -44,8 +44,8 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
     return SizedBox(
       height: 300,
       child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        scrollDirection: .horizontal,
+        padding: const .symmetric(horizontal: 20),
         itemCount: relevantCategory.length,
         itemBuilder: (_, index) {
           final category = relevantCategory[index];
@@ -55,10 +55,10 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
             onTap: () => navigateToDetail(category),
             child: Container(
               width: size.width * 0.75,
-              margin: const EdgeInsets.only(right: 20, bottom: 20),
+              margin: const .only(right: 20, bottom: 20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: .circular(20),
                 boxShadow: const [
                   BoxShadow(
                     offset: Offset(5, 5),
@@ -68,27 +68,23 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: .start,
+                mainAxisSize: .min,
                 children: [
                   Hero(
                     tag: category.id,
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      borderRadius: const .all(.circular(20)),
                       child: Image.network(
                         category.image,
                         height: 185,
                         width: size.width * 0.75,
-                        fit: BoxFit.cover,
+                        fit: .cover,
                         loadingBuilder: (_, child, loadingProgress) {
                           if (loadingProgress != null) {
                             if (_loadingStates[index] != true) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (mounted) {
-                                  setState(() {
-                                    _loadingStates[index] = true;
-                                  });
-                                }
+                                if (mounted) setState(() => _loadingStates[index] = true);
                               });
                             }
                             return Shimmer.fromColors(
@@ -103,11 +99,7 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
                           } else {
                             if (_loadingStates[index] != false) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (mounted) {
-                                  setState(() {
-                                    _loadingStates[index] = false;
-                                  });
-                                }
+                                if (mounted) setState(() => _loadingStates[index] = false);
                               });
                             }
                             return child;
@@ -118,18 +110,17 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
                   ),
                   isLoading
                       ? Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const .all(12.0),
                           child: Shimmer.fromColors(
                             baseColor: Colors.grey.shade300,
                             highlightColor: Colors.grey.shade100,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: .start,
+                              mainAxisSize: .min,
                               children: [
                                 const SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: .spaceBetween,
                                   children: [
                                     Container(
                                       height: 14,
@@ -154,14 +145,13 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
                           ),
                         )
                       : Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const .all(12.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: .start,
+                            mainAxisSize: .min,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: .spaceBetween,
                                 children: [
                                   Text(
                                     category.name,

@@ -1,8 +1,8 @@
-import 'package:booking_app/pages/details.dart';
 import 'package:booking_app/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import '../pages/booking.dart';
 import '../pages/profile.dart';
 
 class BottomNav extends StatefulWidget {
@@ -17,7 +17,7 @@ class _BottomNavState extends State<BottomNav> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const DetailsScreen(),
+    const BookingScreen(),
     const ProfilePage(),
   ];
 
@@ -26,7 +26,7 @@ class _BottomNavState extends State<BottomNav> {
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+        margin: const .symmetric(horizontal: 50, vertical: 16),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
@@ -34,10 +34,10 @@ class _BottomNavState extends State<BottomNav> {
               Color(0xFF42A5F5),
               Color(0xFF1E88E5),
             ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: .topLeft,
+            end: .bottomRight,
           ),
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: .circular(40),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),
@@ -47,7 +47,7 @@ class _BottomNavState extends State<BottomNav> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+          padding: const .symmetric(horizontal: 15, vertical: 12),
           child: GNav(
             gap: 8,
             activeColor: Colors.white,
