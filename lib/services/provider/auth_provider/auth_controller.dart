@@ -34,6 +34,7 @@ class AuthController {
     }
   }
 
+
   Future<void> reset(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -41,6 +42,8 @@ class AuthController {
       throw "User not found";
     }
   }
+
+
 
   Future<void> signOut() async {
     try {
