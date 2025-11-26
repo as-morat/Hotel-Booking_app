@@ -1,5 +1,5 @@
 import 'package:booking_app/navigation/bottom_nav.dart';
-import 'package:booking_app/pages/sign_in.dart';
+import 'package:booking_app/pages/auth/auth_provider/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

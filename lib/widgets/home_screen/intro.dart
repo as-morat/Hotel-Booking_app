@@ -48,7 +48,7 @@ class Intro extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               Text(
-                "Hey, Ash! Tell us where you want to go",
+                "Hey! Tell us where you want to go",
                 style: AppWidget.whiteTextStyle(26),
               ),
               const SizedBox(height: 12),

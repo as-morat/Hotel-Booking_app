@@ -1,10 +1,10 @@
 import 'package:booking_app/models/category_model.dart';
-import 'package:booking_app/pages/details.dart';
 import 'package:booking_app/services/provider/category_provider/category_provider.dart';
 import 'package:booking_app/services/provider/category_provider/category_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../pages/booking/screens/details/hotel_details_screen.dart';
 import '../../services/widgets_supported.dart';
 
 class RelevantCategory extends ConsumerStatefulWidget {
@@ -84,7 +84,9 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
                           if (loadingProgress != null) {
                             if (_loadingStates[index] != true) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (mounted) setState(() => _loadingStates[index] = true);
+                                if (mounted) {
+                                  setState(() => _loadingStates[index] = true);
+                                }
                               });
                             }
                             return Shimmer.fromColors(
@@ -99,7 +101,9 @@ class _RelevantCategoryState extends ConsumerState<RelevantCategory> {
                           } else {
                             if (_loadingStates[index] != false) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (mounted) setState(() => _loadingStates[index] = false);
+                                if (mounted) {
+                                  setState(() => _loadingStates[index] = false);
+                                }
                               });
                             }
                             return child;

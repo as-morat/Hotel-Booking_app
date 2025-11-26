@@ -1,26 +1,25 @@
-import 'package:booking_app/pages/sign_in.dart';
+import 'package:booking_app/pages/auth/sign_up.dart';
 import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/provider/auth_provider/auth_controller.dart';
-import '../widgets/custom_snackbar.dart';
+import 'auth_controller.dart';
 
-class SignUp extends ConsumerStatefulWidget {
-  const SignUp({super.key});
+
+class SignIn extends ConsumerStatefulWidget {
+  const SignIn({super.key});
 
   @override
-  ConsumerState<SignUp> createState() => _SignUpState();
+  ConsumerState<SignIn> createState() => _SignInState();
 }
 
-class _SignUpState extends ConsumerState<SignUp> {
+class _SignInState extends ConsumerState<SignIn> {
   final _formKey = GlobalKey<FormState>();
   AuthController get _auth => ref.read(authControllerProvider);
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
 
   Future<void> _submit() async {
@@ -29,15 +28,15 @@ class _SignUpState extends ConsumerState<SignUp> {
 
     setState(() => _isLoading = true);
     try {
-      await _auth.signUp(
+      await _auth.signIn(
         _emailController.text.trim(),
-        _confirmPasswordController.text.trim(),
+        _passwordController.text.trim(),
       );
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         showCustomSnackBar(
           context,
-          'Sign up successfully!',
+          'Sign in successfully!',
           icon: Icons.check_circle_outline,
           color: Colors.green,
         );
@@ -63,11 +62,12 @@ class _SignUpState extends ConsumerState<SignUp> {
     try {
       await _auth.googleSignIn();
       if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         showCustomSnackBar(
           context,
-          'Sign up successfully!',
+          'Sign in successfully!',
           icon: Icons.check_circle_outline,
-          color: Colors.greenAccent,
+          color: Colors.green,
         );
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
@@ -90,7 +90,6 @@ class _SignUpState extends ConsumerState<SignUp> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -115,10 +114,10 @@ class _SignUpState extends ConsumerState<SignUp> {
                   color: theme.colorScheme.primaryContainer.withValues(
                     alpha: 0.45,
                   ),
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: .circular(40),
                 ),
                 child: Text(
-                  "Join us today",
+                  "Welcome Back",
                   style: AppWidget.normalTextStyle(18).copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w600,
@@ -127,11 +126,11 @@ class _SignUpState extends ConsumerState<SignUp> {
               ),
               Container(
                 height: 120,
-                width: 220,
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                width: 240,
+                padding: const .symmetric(vertical: 12),
                 alignment: .topLeft,
                 child: Text(
-                  "Create your account",
+                  "Log in to your account",
                   style: AppWidget.normalTextStyle(
                     36,
                   ).copyWith(fontWeight: FontWeight.w800),
@@ -146,6 +145,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       controller: _emailController,
                       icon: Icons.email_outlined,
                       hintText: "Email",
+                      padding: 18,
                       obscureText: false,
                       type: TextInputType.emailAddress,
                     ),
@@ -153,29 +153,22 @@ class _SignUpState extends ConsumerState<SignUp> {
                       controller: _passwordController,
                       icon: Icons.lock_outline,
                       hintText: "Password",
+                      padding: 2,
                       obscureText: !_isPasswordVisible,
                       type: TextInputType.visiblePassword,
                       isPassword: true,
-                      onVisibilityToggle: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
                     ),
-                    _textField(
-                      controller: _confirmPasswordController,
-                      icon: Icons.lock_outline,
-                      hintText: "Confirm Password",
-                      obscureText: !_isConfirmPasswordVisible,
-                      type: TextInputType.visiblePassword,
-                      isPassword: true,
-                      isConfirmPassword: true,
-                      onVisibilityToggle: () {
-                        setState(() {
-                          _isConfirmPasswordVisible =
-                              !_isConfirmPasswordVisible;
-                        });
-                      },
+                    Align(
+                      alignment: .topRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          elevation: 0,
+                          splashFactory: NoSplash.splashFactory,
+                          overlayColor: Colors.transparent,
+                        ),
+                        child: const Text("Forgot Password?"),
+                      ),
                     ),
                   ],
                 ),
@@ -189,9 +182,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                   style: ElevatedButton.styleFrom(
                     elevation: 6,
                     padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: .circular(16)),
                     shadowColor: Colors.blue.withValues(alpha: 0.25),
                   ),
                   child: Container(
@@ -215,7 +206,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                             strokeWidth: 3,
                           )
                         : const Text(
-                            "Create Account",
+                            "Log In",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -231,7 +222,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                 mainAxisAlignment: .center,
                 children: [
                   Text(
-                    "Already have an account? ",
+                    "Don't have an account? ",
                     style: AppWidget.normalTextStyle(
                       14,
                     ).copyWith(color: Colors.black54),
@@ -239,10 +230,10 @@ class _SignUpState extends ConsumerState<SignUp> {
                   GestureDetector(
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const SignIn()),
+                      MaterialPageRoute(builder: (_) => const SignUp()),
                     ),
                     child: Text(
-                      "Log In",
+                      "Sign Up",
                       style: AppWidget.normalTextStyle(17).copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
@@ -289,19 +280,18 @@ class _SignUpState extends ConsumerState<SignUp> {
     required TextEditingController controller,
     required IconData icon,
     required String hintText,
+    required double padding,
     bool obscureText = false,
     TextInputType type = TextInputType.none,
     bool isPassword = false,
-    bool isConfirmPassword = false,
-    VoidCallback? onVisibilityToggle,
   }) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
     return Container(
-      height: 60,
+      height: 58,
       width: size.width,
-      margin: const .only(bottom: 18),
+      margin: .only(bottom: padding),
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
         borderRadius: .circular(12),
@@ -317,25 +307,25 @@ class _SignUpState extends ConsumerState<SignUp> {
           if (hintText == "Email" && !value.contains('@')) {
             return 'Please enter a valid email';
           }
-          if (hintText == "Password" && value.length < 6) {
-            return 'Password must be at least 6 characters';
-          }
-          if (isConfirmPassword && value != _passwordController.text) {
-            return 'Passwords do not match';
-          }
           return null;
         },
         decoration: InputDecoration(
           contentPadding: const .symmetric(vertical: 14),
-          border: InputBorder.none,
+          border: .none,
           prefixIcon: Icon(icon, size: 24, color: theme.colorScheme.primary),
           suffixIcon: isPassword
               ? IconButton(
                   icon: Icon(
-                    obscureText ? Icons.visibility_off : Icons.visibility,
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                     color: theme.colorScheme.primary,
                   ),
-                  onPressed: onVisibilityToggle,
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
                 )
               : null,
           hintText: hintText,

@@ -2,8 +2,8 @@ import 'package:booking_app/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-import '../pages/booking.dart';
-import '../pages/profile.dart';
+import '../pages/booking/screens/booking/booking_screen.dart';
+import '../pages/profile/screens/profile_page.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});

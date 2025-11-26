@@ -14,6 +14,7 @@ class AppDB {
       path,
       version: 1,
       onCreate: (db, version) async {
+
         await db.execute("""
           CREATE TABLE user_profile (
             userId TEXT PRIMARY KEY,
@@ -23,15 +24,20 @@ class AppDB {
           );
         """);
 
-        // await db.execute("""
-        //   CREATE TABLE bookings (
-        //     id TEXT PRIMARY KEY,
-        //     userId TEXT,
-        //     title TEXT,
-        //     price TEXT,
-        //     location TEXT
-        //   );
-        // """);
+        await db.execute("""
+          CREATE TABLE bookings (
+            id TEXT PRIMARY KEY,
+            userId TEXT,
+            title TEXT,
+            price TEXT,
+            location TEXT,
+            image TEXT,
+            guest TEXT,
+            checkIn TEXT,
+            checkOut TEXT,
+            isConfirmed INTEGER
+          );
+        """);
       },
     );
 
