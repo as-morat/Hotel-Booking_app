@@ -1,4 +1,4 @@
-import 'package:booking_app/models/places_model.dart';
+import 'package:booking_app/pages/home/models/places_model.dart';
 
 List<PlacesModel> places = [
   PlacesModel(

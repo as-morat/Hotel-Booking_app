@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../services/widgets_supported.dart';
+import '../../../../../services/text_style.dart';
 
 class OfferItem extends StatelessWidget {
   final IconData icon;

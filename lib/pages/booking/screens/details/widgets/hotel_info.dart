@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../models/category_model.dart';
-import '../../../../../services/widgets_supported.dart';
+import '../../../../../services/text_style.dart';
 
 class HotelInfoSection extends StatelessWidget {
   final Category hotel;

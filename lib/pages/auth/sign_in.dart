@@ -1,10 +1,10 @@
 import 'package:booking_app/pages/auth/sign_up.dart';
-import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/services/text_style.dart';
 import 'package:booking_app/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'auth_controller.dart';
+import 'auth_provider/auth_controller.dart';
 
 
 class SignIn extends ConsumerStatefulWidget {

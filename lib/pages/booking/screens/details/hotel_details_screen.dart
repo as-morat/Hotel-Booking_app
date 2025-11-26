@@ -3,7 +3,7 @@ import 'package:booking_app/pages/booking/screens/details/widgets/booking_form.d
 import 'package:booking_app/pages/booking/screens/details/widgets/hotel_header.dart';
 import 'package:booking_app/pages/booking/screens/details/widgets/hotel_info.dart';
 import 'package:booking_app/pages/booking/screens/details/widgets/offer_item.dart';
-import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/services/text_style.dart';
 import 'package:booking_app/widgets/custom_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

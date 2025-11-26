@@ -1,11 +1,11 @@
 import 'package:booking_app/models/category_model.dart';
-import 'package:booking_app/services/provider/category_provider/category_provider.dart';
-import 'package:booking_app/services/provider/category_provider/category_services.dart';
+import 'package:booking_app/providers/category_provider.dart';
+import 'package:booking_app/providers/category_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../pages/booking/screens/details/hotel_details_screen.dart';
-import '../../services/widgets_supported.dart';
+import '../../booking/screens/details/hotel_details_screen.dart';
+import '../../../services/text_style.dart';
 
 class RelevantCategory extends ConsumerStatefulWidget {
   const RelevantCategory({super.key});

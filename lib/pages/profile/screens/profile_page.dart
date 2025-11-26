@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/services/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';

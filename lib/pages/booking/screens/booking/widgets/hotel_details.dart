@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../model/booking_model.dart';
 import 'status_badge.dart';
-import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/services/text_style.dart';
 
 class HotelDetails extends StatelessWidget {
   final BookingModel booking;

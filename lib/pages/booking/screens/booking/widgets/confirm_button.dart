@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:booking_app/services/widgets_supported.dart';
+import 'package:booking_app/services/text_style.dart';
 
 import '../../../model/booking_model.dart';
 

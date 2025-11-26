@@ -1,4 +1,4 @@
-import 'package:booking_app/pages/home.dart';
+import 'package:booking_app/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
